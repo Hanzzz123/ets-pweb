@@ -1,80 +1,92 @@
-//callback function step 1 button click
-$(document).ready(function(){
-    performSearch();
-    });
 
-//api request
-function performSearch(){
-    let request;
-    document.preventDefault();
-    //asynchronous call
+const ElementID = document.getElementById("result");
+const apiUrl = "http://159.223.51.203/api/bio";
 
-    request = $.ajax({
-        url:'http://159.223.51.203:81/api/bio',
-        type: "GET",
-    });
+function Card(name, id) {
+    const outer = document.createElement("div");
+    outer.classList.add
+    (
+        "col-lg-2",
+        "col-md-3",
+        "col-sm-12",
+        "col-12",
+        "mb-3"
+    );
+    outer.style.marginTop = "20px";
 
-    // step 3
-    request.done(function (response){
-        formatSearch(response);
-    });
+    const cardStyle = document.createElement("div");
+    cardStyle.classList.add
+    (
+        "card",
+        "border-left-primary",
+        "shadow",
+        "h-120",
+        "py-3"
+    );
+    cardStyle.style.borderRadius = "5px";
 
+    const body = document.createElement("div");
+    body.classList.add("card-body");
+
+    const content = document.createElement("div");
+    content.classList.add
+    (
+        "row",
+        "no-gutters",
+        "align-items-center"
+    );
+
+    const column = document.createElement("div");
+    column.classList.add
+    (
+        "col",
+        "mr-5"
+    );
+
+    const title = document.createElement("div");
+    title.classList.add
+    (
+        "text-xs",
+        "font-weight-bold",
+        "text-primary",
+        "mb-1"
+    );
+    title.textContent = name;
+    title.style.marginRight = "10px";
+
+    const value = document.createElement("div");
+    value.classList.add
+    (
+        "h6",
+        "mb-1",
+        "font-weight-normal",
+        "text-black"
+    );
+    value.textContent = id;
+
+    column.appendChild(title);
+    column.appendChild(value);
+    content.appendChild(column);
+    body.appendChild(content);
+    cardStyle.appendChild(body);
+    outer.appendChild(cardStyle);
+    ElementID.appendChild(outer);
 }
-
-function formatSearch(jsonObject){
-    let name_1 = jsonObject[0].name;
-    let id_1 = jsonObject[0].id;
-
-
-//     var date2 = jsonObject.list[1].dt_txt;
-//     var city_name2 = jsonObject.city.name;
-//     var city_weather2 = jsonObject.list[1].weather[0].main;
-//     var city_temp2 = jsonObject.list[1].main.temp;
-//     var iconcode2 = jsonObject.list[1].weather[0].icon;
-//     var iconurl2 = "https://openweathermap.org/img/wn/" + iconcode2 + "@4x.png";
-//
-//
-//     var date3 = jsonObject.list[2].dt_txt;
-//     var city_name3 = jsonObject.city.name;
-//     var city_weather3 = jsonObject.list[2].weather[0].main;
-//     var city_temp3 = jsonObject.list[2].main.temp
-//     var iconcode3 = jsonObject.list[2].weather[0].icon;
-//     var iconurl3 = "https://openweathermap.org/img/wn/" + iconcode3 + "@4x.png";
-//
-//
-//     var date4 = jsonObject.list[3].dt_txt;
-//     var city_name4 = jsonObject.city.name;
-//     var city_weather4 = jsonObject.list[3].weather[0].main;
-//     var city_temp4 = jsonObject.list[3].main.temp
-//     var iconcode4 = jsonObject.list[3].weather[0].icon;
-//     var iconurl4 = "https://openweathermap.org/img/wn/" + iconcode4 + "@4x.png";
-//
-//
-
-    $("#name1").text(name_1);
-    $("#id1").text(id_1);
-
-//
-//     $("#date2").text(date2);
-//     $("#city-name2").text(city_name2);
-//     $("#city-weather2").text(city_weather2);
-//     $("#city-temp2").text(city_temp2 + " Celsius");
-//     $('#icon2').attr('src', iconurl2);
-//
-//     $("#date3").text(date3);
-//     $("#city-name3").text(city_name3);
-//     $("#city-weather3").text(city_weather3);
-//     $("#city-temp3").text(city_temp3 + " Celsius");
-//     $('#icon3').attr('src', iconurl3);
-//
-//     $("#date4").text(date4);
-//     $("#city-name4").text(city_name4);
-//     $("#city-weather4").text(city_weather4);
-//     $("#city-temp4").text(city_temp4 + " Celsius");
-//     $('#icon4').attr('src', iconurl4);
-//
-// }
-
-
-
-}
+fetch(apiUrl)
+    .then((response) =>
+    {
+        if (!response.ok)
+        {
+            throw new Error("Network response error");
+        }
+        return response.json();
+    })
+    .then((data) =>
+    {
+        for (let index = 0; index < 20; index++) {
+            const name = data[index].name;
+            const id = data[index].id;
+            Card(name, id);
+        }
+    })
+    .catch((error) => console.error("Error:", error));
